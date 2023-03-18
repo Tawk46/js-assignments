@@ -377,6 +377,15 @@ describe('04-arrays-tasks', function() {
     it.optional('propagateItemsByPositionIndex should propagate every item its position time', function () {
         [
             {
+                arr:      [],
+                expected: []
+             }, {
+                 arr:      [ 1 ],
+                 expected: [ 1 ]
+            }, {
+                arr:      [ 'a', 'b'     ],
+                expected: [ 'a', 'b','b' ]
+            }, {
                 arr:      [ 'a', 'b',     'c',          null                ],
                 expected: [ 'a', 'b','b', 'c','c','c',  null,null,null,null ]
             }, {
