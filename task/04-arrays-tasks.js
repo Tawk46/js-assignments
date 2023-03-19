@@ -350,7 +350,7 @@ function sortDigitNamesByNumericOrder(arr) {
  *   [ 1, 10, 100, 1000 ]  => 1111
  */
 function getItemsSum(arr) {
-   throw new Error('Not implemented');
+   return arr.reduce((currSum, currValue) => currSum + currValue, 0);
 }
  
 /** 
@@ -366,7 +366,7 @@ function getItemsSum(arr) {
  *  [ null, undefined, NaN, false, 0, '' ]  => 6
  */
 function getFalsyValuesCount(arr) {
-   throw new Error('Not implemented');
+    return arr.filter(elem => !elem).length;
 }
 
 /**
@@ -384,7 +384,7 @@ function getFalsyValuesCount(arr) {
  *    [ true, 0, 1, 'true' ], true => 1
  */
 function findAllOccurences(arr, item) {
-   throw new Error('Not implemented');
+   return arr.filter(elem => elem === item).length;
 }
 
 /**
@@ -399,7 +399,7 @@ function findAllOccurences(arr, item) {
  *    ['rock', 'paper', 'scissors']     => 'rock,paper,scissors'
  */
 function toStringList(arr) {
-   throw new Error('Not implemented');
+   return arr.toString();
 }
 
 
@@ -428,7 +428,18 @@ function toStringList(arr) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  */
 function sortCitiesArray(arr) {
-   throw new Error('Not implemented');
+   let sortedArr = arr.sort((a, b) => {
+      if (a.country < b.country) {
+         return -1;
+      }
+      else if (a.country > b.country) {
+         return 1;
+      }
+      else {
+         return (a.city < b.city) ? -1 : 1; 
+      }
+   });
+   return sortedArr;
 }
 
 /**
