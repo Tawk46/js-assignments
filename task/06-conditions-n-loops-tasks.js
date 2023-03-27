@@ -463,7 +463,71 @@ function isBracketsBalanced(str) {
  *
  */
 function timespanToHumanString(startDate, endDate) {
-    throw new Error('Not implemented');
+    let secs = (endDate - startDate) / 1000;
+    let mins = secs / 60;
+    let hours = mins / 60;
+    let days = hours / 24;
+    let months = days / 30;
+    let years = months / 12;
+
+    if (secs >= 0 && secs <= 45) {
+        return "a few seconds ago";
+    }
+
+    else if (secs > 45 && secs <= 90) {
+        return "a minute ago";
+    }
+
+    else if (secs > 90 && mins <= 45) {
+        if (secs % 60 != 0 && secs % 30 == 0) {
+            --mins;
+        }
+        return `${Math.round(mins)} minutes ago`;
+    }
+
+    else if (mins > 45 && mins <= 90) {
+        return "an hour ago"; 
+    }
+
+    else if (mins > 90 && hours <= 22) {
+        if (mins % 60 != 0 && mins % 30 == 0) {
+            --hours;
+        }
+        return `${Math.round(hours)} hours ago`;
+    }
+
+    else if (hours > 22 && hours <= 36) {
+        return "a day ago";
+    }
+
+    else if (hours > 36 && days <= 25) {
+        if (hours % 24 != 0 && hours % 12 == 0) {
+            --days;
+        }
+        return `${Math.round(days)} days ago`;
+    }
+
+    else if (days > 25 && days <= 45) {
+        return "a month ago";
+    }
+
+    else if (days > 45 && days < 345) {
+        if (days % 30 != 0 && days % 15 == 0) {
+            --months;
+        }
+        return `${Math.round(months)} months ago`;
+    }
+
+    else if (days >= 345 && days <= 545) {
+        return "a year ago";
+    }
+
+    else {
+        if (days % 365 != 0 && days % 182.5 == 0) {
+            --years;
+        }
+        return `${Math.round(years)} years ago`;
+    }
 }
 
 
@@ -487,7 +551,25 @@ function timespanToHumanString(startDate, endDate) {
  *    365, 10 => '365'
  */
 function toNaryString(num, n) {
-    throw new Error('Not implemented');
+    let res = "";
+    let currDigit;
+
+    if (num < n) {
+        return num;
+    }
+
+    while (num >= n) {
+        currDigit = num % n;
+        res = currDigit.toString() + res;
+
+        num = (num - currDigit) / n;
+        if (num < n) {
+            res = num.toString() + res;
+            break;
+        }
+    } 
+
+    return res;
 }
 
 
@@ -504,7 +586,28 @@ function toNaryString(num, n) {
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
 function getCommonDirectoryPath(pathes) {
-    throw new Error('Not implemented');
+    function commonPath(path1, path2) {
+        let commonDir = "";
+        
+        let i = 0; 
+        while (path1[i] && path2[i]) {
+            if (path1[i] == path2[i]) {
+                commonDir += path1[i];
+            } else {
+                break;
+            }
+            ++i;
+        }
+
+        return commonDir.length != 0 ? commonDir.match(/.*\//)[0] : "";
+    }
+    
+    let commonDir = commonPath(pathes[0], pathes[1]);
+    for (let i = 2; i < pathes.length; ++i ) {
+        commonDir = commonPath(commonDir, pathes[i]);
+    }
+    
+    return commonDir;
 }
 
 
@@ -527,7 +630,21 @@ function getCommonDirectoryPath(pathes) {
  *
  */
 function getMatrixProduct(m1, m2) {
-    throw new Error('Not implemented');
+    let resMatrix = new Array(m1.length);
+
+    for (let i = 0; i < m1.length; ++i) {
+        resMatrix[i] = new Array(m2[0].length);
+
+        for (let j = 0; j < m2[0].length; ++j) {
+            resMatrix[i][j] = 0;
+
+            for (let k = 0; k < m1[0].length; ++k) {
+                resMatrix[i][j] += m1[i][k] * m2[k][j];
+            } 
+        }
+    }
+
+    return resMatrix;
 }
 
 
@@ -562,7 +679,30 @@ function getMatrixProduct(m1, m2) {
  *
  */
 function evaluateTicTacToePosition(position) {
-    throw new Error('Not implemented');
+    if ((position[1][1] == position[0][0] && position[1][1] == position[2][2]) ||
+        (position[1][1] == position[2][0] && position[1][1] == position[0][2])) {
+
+        return position[1][1];
+    }
+    
+    let winner;
+    for (let i = 0; i < 3; ++i) {
+        for (let j = 1; j < 3; ++j) {
+            if (position[i][j] == position[i][j - 1] || position[j][i] == position[j - 1][i]) {
+                if (j == 2) {
+                    winner = (position[i][j] == position[i][j - 1]) ? position[i][j] : position[j][i];
+                    
+                    if (winner != undefined) {
+                        return winner;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+    }
+    
+    return undefined;
 }
 
 
