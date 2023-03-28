@@ -33,7 +33,18 @@
  *
  */
 function* get99BottlesOfBeer() {
-    throw new Error('Not implemented');
+    let numOfBottles = 99;
+    while (numOfBottles > 2) {
+        yield `${numOfBottles} bottles of beer on the wall, ${numOfBottles} bottles of beer.`;
+        yield `Take one down and pass it around, ${--numOfBottles} bottles of beer on the wall.`;
+    }
+
+    yield '2 bottles of beer on the wall, 2 bottles of beer.';
+    yield 'Take one down and pass it around, 1 bottle of beer on the wall.';
+    yield '1 bottle of beer on the wall, 1 bottle of beer.';
+    yield 'Take one down and pass it around, no more bottles of beer on the wall.';
+    yield 'No more bottles of beer on the wall, no more bottles of beer.';
+    yield 'Go to the store and buy some more, 99 bottles of beer on the wall.';
 }
 
 
@@ -47,7 +58,20 @@ function* get99BottlesOfBeer() {
  *
  */
 function* getFibonacciSequence() {
-    throw new Error('Not implemented');
+    let prevPrevNum = 0;
+    let prevNum = 1;
+
+    yield prevPrevNum;
+    yield prevNum;
+
+    let currNum;
+    while(true) {
+        currNum = prevNum + prevPrevNum;
+        yield currNum;
+
+        prevPrevNum = prevNum;
+        prevNum = currNum;
+    }
 }
 
 
@@ -58,7 +82,7 @@ function* getFibonacciSequence() {
  * Each node have child nodes in node.children array.
  * The leaf nodes do not have 'children' property.
  *
- * @params {object} root the tree root
+ * @param {object} root the tree root
  * @return {Iterable.<object>} the sequence of all tree nodes in depth-first order
  * @example
  *
@@ -82,7 +106,17 @@ function* getFibonacciSequence() {
  *
  */
 function* depthTraversalTree(root) {
-    throw new Error('Not implemented');
+    let nodesToVisit = [root];
+    let currNode;
+
+    while (nodesToVisit.length != 0) {
+        currNode = nodesToVisit[0];
+        nodesToVisit.shift();
+        if (currNode.children) {
+            nodesToVisit = currNode.children.concat(nodesToVisit);
+        }
+        yield currNode;
+    } 
 }
 
 
@@ -93,7 +127,7 @@ function* depthTraversalTree(root) {
  * Each node have child nodes in node.children array.
  * The leaf nodes do not have 'children' property.
  *
- * @params {object} root the tree root
+ * @param {object} root the tree root
  * @return {Iterable.<object>} the sequence of all tree nodes in breadth-first order
  * @example
  *     source tree (root = 1):
@@ -108,7 +142,17 @@ function* depthTraversalTree(root) {
  *
  */
 function* breadthTraversalTree(root) {
-    throw new Error('Not implemented');
+    let nodesToVisit = [root];
+    let currNode;
+
+    while (nodesToVisit.length != 0) {
+        currNode = nodesToVisit[0];
+        nodesToVisit.shift();
+        if (currNode.children) {
+            nodesToVisit = nodesToVisit.concat(currNode.children);
+        }
+        yield currNode;
+    }
 }
 
 
@@ -116,8 +160,8 @@ function* breadthTraversalTree(root) {
  * Merges two yield-style sorted sequences into the one sorted sequence.
  * The result sequence consists of sorted items from source iterators.
  *
- * @params {Iterable.<number>} source1
- * @params {Iterable.<number>} source2
+ * @param {Iterable.<number>} source1
+ * @param {Iterable.<number>} source2
  * @return {Iterable.<number>} the merged sorted sequence
  *
  * @example
@@ -126,7 +170,35 @@ function* breadthTraversalTree(root) {
  *   [ 1, 3, 5, ... ], [ -1 ] => [ -1, 1, 3, 5, ...]
  */
 function* mergeSortedSequences(source1, source2) {
-    throw new Error('Not implemented');
+    const iterator1 = source1();
+    const iterator2 = source2();
+    let iteration1 = iterator1.next();
+    let iteration2 = iterator2.next();
+
+    while (!iteration1.done && !iteration2.done) {
+        if (iteration1.value < iteration2.value) {
+            yield iteration1.value;
+            yield iteration2.value
+        } else {
+            yield iteration2.value
+            yield iteration1.value
+        }
+
+        iteration1 = iterator1.next();
+        iteration2 = iterator2.next();
+    }
+
+    if (iteration1.done) {
+        while(!iteration2.done) {
+            yield iteration2.value;
+            iteration2 = iterator2.next();
+        }
+    } else if (iteration2.done) {
+        while(!iteration1.done) {
+            yield iteration1.value;
+            iteration1 = iterator1.next();
+        }
+    }
 }
 
 
