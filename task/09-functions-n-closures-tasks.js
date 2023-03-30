@@ -25,8 +25,8 @@
  *   getComposition(Math.sin, Math.asin)(x) => Math.sin(Math.acos(x))
  *
  */
-function getComposition(f,g) {
-    throw new Error('Not implemented');
+function getComposition(f, g) {
+    return  x => f(g(x));
 }
 
 
@@ -47,7 +47,7 @@ function getComposition(f,g) {
  *
  */
 function getPowerFunction(exponent) {
-    throw new Error('Not implemented');
+    return x => x ** exponent;
 }
 
 
@@ -55,7 +55,7 @@ function getPowerFunction(exponent) {
  * Returns the polynom function of one argument based on specified coefficients.
  * See: https://en.wikipedia.org/wiki/Polynomial#Definition
  *
- * @params {integer}
+ * @param {integer}
  * @return {Function}
  *
  * @example
@@ -65,7 +65,17 @@ function getPowerFunction(exponent) {
  *   getPolynom()      => null
  */
 function getPolynom() {
-    throw new Error('Not implemented');
+    return x => {
+        let polyDeg = arguments.length - 1;
+        let y = polyDeg >= 0 ? 0 : null;
+
+        let i = 0;
+        while (polyDeg >= 0) {
+            y += arguments[i] * x ** polyDeg--;
+            ++i;
+        }
+        return y;
+    }
 }
 
 

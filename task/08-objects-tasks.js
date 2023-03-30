@@ -137,8 +137,10 @@ class CssSelectorBuilder {
         let newObj = new CssSelectorBuilder;
         Object.assign(newObj, this);
         newObj._element = value;
+
         Object.defineProperty(newObj, "lastElemLvl", { value: 1 });
         this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        
         return newObj;
     }
 
@@ -150,6 +152,7 @@ class CssSelectorBuilder {
 
         Object.defineProperty(newObj, "lastElemLvl", { value: 2 });
         this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        
         return newObj;
     }
 
@@ -165,6 +168,7 @@ class CssSelectorBuilder {
 
         Object.defineProperty(newObj, "lastElemLvl", { value: 3 });
         this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        
         return newObj;
     }
 
@@ -180,6 +184,7 @@ class CssSelectorBuilder {
 
         Object.defineProperty(newObj, "lastElemLvl", { value: 4 });
         this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+       
         return newObj;
     }
 
@@ -195,6 +200,7 @@ class CssSelectorBuilder {
 
         Object.defineProperty(newObj, "lastElemLvl", { value: 5 });
         this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        
         return newObj;
     }
 
@@ -206,12 +212,14 @@ class CssSelectorBuilder {
         
         Object.defineProperty(newObj, "lastElemLvl", { value: 6 });
         this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        
         return newObj;
     }
 
     combine(selector1, combinator, selector2) {
         const combined = new CssSelectorBuilder;
         combined._combinedStr = selector1.stringify() + ' ' + combinator + ' ' + selector2.stringify();
+        
         return combined;
     }
 
