@@ -23,7 +23,12 @@
  *    console.log(r.getArea());   // => 200
  */
 function Rectangle(width, height) {
-    throw new Error('Not implemented');
+    this.width = width,
+    this.height = height,
+
+    this.getArea = function() {
+        return this.width * this.height;
+    }    
 }
 
 
@@ -38,7 +43,7 @@ function Rectangle(width, height) {
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
 function getJSON(obj) {
-    throw new Error('Not implemented');
+    return JSON.stringify(obj);
 }
 
 
@@ -55,6 +60,12 @@ function getJSON(obj) {
  */
 function fromJSON(proto, json) {
     throw new Error('Not implemented');
+    
+    let protoObj = new proto.constructor;
+    let objFromJSON = JSON.parse(json);
+    let resObj = Object.assign(protoObj, objFromJSON)
+
+    return resObj;
 }
 
 
@@ -106,36 +117,122 @@ function fromJSON(proto, json) {
  *  For more examples see unit tests.
  */
 
-const cssSelectorBuilder = {
+class CssSelectorBuilder {
+    constructor() {}
+    
+    checkPropExistence(propName) {
+        if(this[propName]) {
+            throw "Element, id and pseudo-element should not occur more then one time inside the selector";    
+        }
+    }
 
-    element: function(value) {
-        throw new Error('Not implemented');
-    },
+    checkOrder(currElemLvl, prevElemLvl) {
+        if (currElemLvl < prevElemLvl) {
+            throw "Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element";    
+        }
+    }
 
-    id: function(value) {
-        throw new Error('Not implemented');
-    },
+    element(value) {
+        this.checkPropExistence("_element");
+        let newObj = new CssSelectorBuilder;
+        Object.assign(newObj, this);
+        newObj._element = value;
+        Object.defineProperty(newObj, "lastElemLvl", { value: 1 });
+        this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        return newObj;
+    }
 
-    class: function(value) {
-        throw new Error('Not implemented');
-    },
+    id(value) {
+        this.checkPropExistence("_id");
+        let newObj = new CssSelectorBuilder;
+        Object.assign(newObj, this);
+        newObj._id = '#' + value;
 
-    attr: function(value) {
-        throw new Error('Not implemented');
-    },
+        Object.defineProperty(newObj, "lastElemLvl", { value: 2 });
+        this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        return newObj;
+    }
 
-    pseudoClass: function(value) {
-        throw new Error('Not implemented');
-    },
+    class(value) {
+        let newObj = new CssSelectorBuilder;
+        Object.assign(newObj, this);
 
-    pseudoElement: function(value) {
-        throw new Error('Not implemented');
-    },
+        if (!newObj._class) {
+            newObj._class = [];
+        }
 
-    combine: function(selector1, combinator, selector2) {
-        throw new Error('Not implemented');
-    },
-};
+        newObj._class.push('.' + value);
+
+        Object.defineProperty(newObj, "lastElemLvl", { value: 3 });
+        this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        return newObj;
+    }
+
+    attr(value) {
+        let newObj = new CssSelectorBuilder;
+        Object.assign(newObj, this);
+
+        if (!newObj._attr) {
+            newObj._attr = [];
+        }
+
+        newObj._attr.push('[' + value + ']');
+
+        Object.defineProperty(newObj, "lastElemLvl", { value: 4 });
+        this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        return newObj;
+    }
+
+    pseudoClass(value) {
+        let newObj = new CssSelectorBuilder;
+        Object.assign(newObj, this);
+
+        if (!newObj._pseudoClass) {
+            newObj._pseudoClass = [];
+        }
+
+        newObj._pseudoClass.push(':' + value);
+
+        Object.defineProperty(newObj, "lastElemLvl", { value: 5 });
+        this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        return newObj;
+    }
+
+    pseudoElement(value) {
+        this.checkPropExistence("_pseudoElement");
+        let newObj = new CssSelectorBuilder;
+        Object.assign(newObj, this);
+        newObj._pseudoElement = '::' + value;
+        
+        Object.defineProperty(newObj, "lastElemLvl", { value: 6 });
+        this.checkOrder(newObj.lastElemLvl, this.lastElemLvl);
+        return newObj;
+    }
+
+    combine(selector1, combinator, selector2) {
+        const combined = new CssSelectorBuilder;
+        combined._combinedStr = selector1.stringify() + ' ' + combinator + ' ' + selector2.stringify();
+        return combined;
+    }
+
+    stringify() {
+        let res = '';
+
+        for (let prop in this) {
+            if (prop == '_class' || prop == '_attr' || prop == '_pseudoClass') {
+                res += this[prop].join('');
+            } else {
+                res += this[prop];
+            }
+
+            delete this[prop];
+        }
+
+        return res;
+    }
+}
+
+const cssSelectorBuilder = new CssSelectorBuilder;
 
 
 module.exports = {

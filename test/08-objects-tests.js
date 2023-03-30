@@ -90,12 +90,12 @@ describe('08-objects-tasks', function() {
             assert.deepEqual(
                 actual,
                 data.expected,
-                'fromJson method shoud restore all properties from json'
+                'fromJson method should restore all properties from json'
             );
             assert.equal(
                 actual.__proto__,
                 data.expected.__proto__,
-                'fromJson method shoud restore type from prototype argument'
+                'fromJson method should restore type from prototype argument'
             );
         });
     });
