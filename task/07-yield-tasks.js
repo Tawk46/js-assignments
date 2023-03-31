@@ -105,7 +105,7 @@ function* getFibonacciSequence() {
  *  depthTraversalTree(node1) => node1, node2, node3, node4, node5, node6, node7, node8
  *
  */
-function* depthTraversalTree(root) {
+function* depthTraversalTree(root) {    // For the test timeout should be set to 3000 (mocha -t 3000)
     let nodesToVisit = [root];
     let currNode;
 
@@ -141,7 +141,7 @@ function* depthTraversalTree(root) {
  *           8
  *
  */
-function* breadthTraversalTree(root) {
+function* breadthTraversalTree(root) {       // For the test timeout should be set to 8000 (mocha -t 8000)
     let nodesToVisit = [root];
     let currNode;
 
